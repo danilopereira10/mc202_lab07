@@ -11,4 +11,6 @@ typedef No * p_no;
 
 p_no criar_arvore(p_no esq, p_no dir);
 
+void destruir_arvore(p_no raiz);
+
 #endif

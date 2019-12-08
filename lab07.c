@@ -66,8 +66,34 @@ void resolver_equacao(p_no raiz) {
 
 char* buffer;
 
-void simplifica_expressao(p_no raiz) {
-	if (raiz == NULL || (raiz->esq == NULL && raiz->dir == NULL)) {
+void operar_constantes(p_no raiz) {
+	if (raiz->esq->eh_constante && raiz->dir->eh_constante) {
+		int resultado = 0;
+		resultado = realizar_operacao(raiz);
+
+		free(raiz->dado);
+		raiz->dado = malloc(12 * sizeof(char)); //12 é o máximo de caracteres de um int
+		raiz->dado[0] = '0';
+
+		destruir_arvore(raiz->esq);
+		destruir_arvore(raiz->dir);
+
+		raiz->esq = NULL;
+		raiz->dir = NULL;
+
+		sprintf(raiz->dado, "%d", resultado);
+		raiz->eh_constante = 1;
+	}
+}
+
+void simplificar_expressao(p_no raiz) {
+	if (raiz != NULL && raiz->esq != NULL && raiz->dir != NULL) {
+
+		simplificar_expressao(raiz->esq);
+		simplificar_expressao(raiz->dir);
+		operar_constantes(raiz);
+	}
+	/*if (raiz == NULL || (raiz->esq == NULL && raiz->dir == NULL)) {
 		return;
 	}
 
@@ -79,8 +105,8 @@ void simplifica_expressao(p_no raiz) {
 		raiz->dado = malloc(12 * sizeof(char));
 		raiz->dado[0] = '0';
 
-		free(raiz->esq);
-		free(raiz->dir);
+		destruir_arvore(raiz->esq);
+		destruir_arvore(raiz->dir);
 
 		raiz->esq = NULL;
 		raiz->dir = NULL;
@@ -91,8 +117,9 @@ void simplifica_expressao(p_no raiz) {
 	//if (raiz->esq->eh_constante &&r raiz->dir->eh_constante) {
 	//	raiz->
 	//}
-	simplifica_expressao(raiz->esq);
-	simplifica_expressao(raiz->dir);
+	simplificar_expressao(raiz->esq);
+	simplificar_expressao(raiz->dir);
+	*/
 }
 
 int tem_filhos(p_no raiz) {
@@ -207,13 +234,15 @@ int main() {
 			raiz = criar_folha();
 		}
 
-		simplifica_expressao(raiz);
+		free(buffer);
+
+		simplificar_expressao(raiz);
 
 		printf("\n"); //TODO - remover esse \n depois
 
 		inordem(raiz);
 
-		free(buffer);
+		destruir_arvore(raiz);
 
 		printf("\n");
 	}
