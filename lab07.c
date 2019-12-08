@@ -143,17 +143,17 @@ void inordem(p_no raiz) {
 	}
 }
 
+int eh_numero(char caracter) {
+	return caracter >= '0' && caracter <= '9';
+}
+
 void guardar_dados(p_no raiz, int inicio, int fim) {
-	raiz->eh_constante = (fim - inicio == 0 || buffer[fim - 1] == '-') ? NAO_EH_CONSTANTE : EH_CONSTANTE;
+	raiz->eh_constante = (!eh_numero(buffer[fim])) ? NAO_EH_CONSTANTE : EH_CONSTANTE;
 	raiz->dado = malloc((fim - inicio + 2) * sizeof(char)); //tamanho = fim - inicio + 1; Quando eu somo 2, é porque
 	                                                        // estou adicionando um espaço para o fim da string ('\0')
 	raiz->dado[0] = '0';
 	memcpy(raiz->dado, &buffer[inicio], fim - inicio + 1);
 	raiz->dado[fim - inicio + 1] = '\0';
-}
-
-int eh_numero(char caracter) {
-	return caracter >= '0' && caracter <= '9';
 }
 
 void percorre_numeros(int* i) {
@@ -223,7 +223,7 @@ int main() {
 	for (int contador = 0; contador < m; contador++) {
 		scanf("%m[^\n]%*c", &buffer);
 		
-		printf("%s", buffer); //TODO - remover esse print depois
+		//printf("%s", buffer); //TODO - remover esse print depois
 		int i = 0;
 
 		p_no raiz = NULL;
@@ -238,7 +238,7 @@ int main() {
 
 		simplificar_expressao(raiz);
 
-		printf("\n"); //TODO - remover esse \n depois
+		//printf("\n"); //TODO - remover esse \n depois
 
 		inordem(raiz);
 
